@@ -1,1 +1,18 @@
-
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatbot-service
+  labels:
+    app: chatbot
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '8000'
+    prometheus.io/path: '/metrics'
+spec:
+  type: LoadBalancer # Use ClusterIP for production with Ingress
+  selector:
+    app: chatbot
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000

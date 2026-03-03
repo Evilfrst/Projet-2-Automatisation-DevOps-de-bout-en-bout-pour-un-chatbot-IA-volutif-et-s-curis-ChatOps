@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatbot-deployment
+  labels:
+    app: chatbot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chatbot
+  template:
+    metadata:
+      labels:
+        app: chatbot
+    spec:
+      containers:
+      - name: chatbot
+        image: your-dockerhub-username/chatbot-api:latest # This will be updated by the CI/CD pipeline
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+          - name: REDIS_HOST
+            value: "redis-master" # Assumes Redis is deployed in the same namespace with this service name
+        envFrom:
+          - secretRef:
+              name: chatbot-secrets
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
