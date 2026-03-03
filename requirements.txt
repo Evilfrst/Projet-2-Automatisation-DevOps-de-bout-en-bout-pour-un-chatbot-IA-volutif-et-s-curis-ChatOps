@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+openai
+redis
+python-dotenv
+prometheus-fastapi-instrumentator
+
+# For testing
+pytest
+httpx
